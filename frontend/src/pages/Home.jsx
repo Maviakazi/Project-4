@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import AddNote from "../components/AddNote";
+import NoteCard from "../components/NoteCard";
 import axios from "axios";
+
 
 export default function Home() {
     const msgStyle = {
@@ -44,7 +47,7 @@ return (
                 <p style={msgStyle}>No Notes To Show</p>
             )}
         </div>
-        <AddNote />
+        {/* <AddNote /> */}
     </div>
 );
 }
