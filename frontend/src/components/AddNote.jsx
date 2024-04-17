@@ -60,6 +60,11 @@ const AddNote = ({ refetchNotes }) => {
                     setToastStatus("Error");
                     setToastMsg("Invalid input values!");
                 }
+                else if (error.response.data.statusCode === 400) {
+                    setShowToast(true);
+                    setToastStatus("Error");
+                    setToastMsg(error.response.data.msg);
+                }
                 else {
                     setShowToast(true);
                     setToastStatus("Error");

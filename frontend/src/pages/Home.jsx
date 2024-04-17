@@ -7,17 +7,12 @@ import NoteCard from '../components/NoteCard';
 import ToastMsg from '../components/ToastMsg';
 import { Spinner } from 'react-bootstrap';
 import axios from 'axios';
-import EditModal from '../components/EditModal';
 
 const Home = () => {
     // Toast states
     const [showToast, setShowToast] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
     const [toastStatus, setToastStatus] = useState('');
-    // to store single note
-    const [noteInfo, setNoteInfo] = useState({});
-    // modal info and data
-    const [modalShow, setModalShow] = React.useState(false);
 
     useEffect(() => {
         fetchNotes();
@@ -55,9 +50,16 @@ const Home = () => {
             }
 
         } catch (error) {
-            setShowToast(true);
-            setToastStatus("Error");
-            setToastMsg("Internal server error!");
+            if (error.response.data.statusCode === 400) {
+                setShowToast(true);
+                setToastStatus("Error");
+                setToastMsg(error.response.data.msg);
+            }
+            else {
+                setShowToast(true);
+                setToastStatus("Error");
+                setToastMsg("Internal server error!");
+            }
         }
     }
 
@@ -115,12 +117,6 @@ const Home = () => {
                         status={toastStatus}
                     />
 
-                    {/* View info modal */}
-                    <EditModal
-                        note={noteInfo}
-                        show={modalShow}
-                        onHide={() => setModalShow(false)}
-                    />
                 </div >
             </div >
         </div >
