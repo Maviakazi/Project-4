@@ -1,15 +1,16 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Head() {
-    const linkStyle = {
-        textDecoration: 'none',
-        color: '#f5400f'
-    }
+const Nav = () => {
   return (
-    <nav>
-        <div className="logo">
-            <Link to={'/'} style={linkStyle}><h2>iNote</h2></Link>
-        </div>
+    <nav className="bg-body-tertiary mb-2 py-2 px-4">
+      <Link to={'/'}>
+        <h2>
+          <img src='main-logo.png' width={48} height={48} alt="Logo" />
+        </h2>
+      </Link>
     </nav>
-  )
+  );
 }
+
+export default Nav;

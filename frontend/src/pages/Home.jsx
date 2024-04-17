@@ -1,53 +1,93 @@
-import React, { useEffect, useState } from "react";
-import AddNote from "../components/AddNote";
-import NoteCard from "../components/NoteCard";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { useQuery } from 'react-query';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Nav from '../components/Nav';
+import AddNote from '../components/AddNote';
+import NoteCard from '../components/NoteCard';
+import ToastMsg from '../components/ToastMsg';
+import { Spinner } from 'react-bootstrap';
 
+const Home = () => {
+    // Toast states
+    const [showToast, setShowToast] = useState(false);
+    const [toastMsg, setToastMsg] = useState('');
+    const [toastStatus, setToastStatus] = useState('');
 
-export default function Home() {
-    const msgStyle = {
-        justifyContent: "center",
-        display: "flex",
-        alignItems: "center",
-        height: "50vh",
-        color: "#aaa",
-        letterSpacing: "1px",
-        fontSize: "1.3em",
-    };
-    const [notes, setNotes] = useState([]);
-useEffect(() => {
-    const fetchNotes = () => {
-        axios
-            .get("http://localhost:3000/allNotes")
-            .then((res) => {
-                if (res.data.content) {
-                    setNotes(res.data.content);
-                } else {
-                    setNotes([]);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
-    fetchNotes();
-}, []);
-return (
-    <div>
-        <h1 className="headline">
-            Save Your <span>Notes</span> Here
-        </h1>
+    useEffect(() => {
+        fetchNotes();
+    }, []);
 
-        <div className="cards">
-            {notes && notes.length > 0 ? (
-                notes.map((note) => (
-                    <NoteCard key={note._id} note={note} />
-                ))
-            ) : (
-                <p style={msgStyle}>No Notes To Show</p>
-            )}
-        </div>
-        {/* <AddNote /> */}
-    </div>
-);
-}
+    const fetchNotes = async () => {
+        try {
+
+            const response = await fetch('http://localhost:3500/api/notes');
+            const data = await response.json();
+            console.log(data.data);
+            return data.data;
+        } catch (error) {
+            setShowToast(true);
+            setToastStatus("Error");
+            setToastMsg("Failed to fetch notes!");
+        }
+    }
+
+    const { data, isLoading, error, refetch } = useQuery(
+        ['noteData'],
+        () => fetchNotes(),
+        {
+            refetchOnWindowFocus: false,
+            cacheTime: 0,
+        }
+    );
+
+    if (isLoading) {
+        return <div className='spinner-container d-flex align-items-center justify-content-center' style={{ minHeight: '100vh' }}>
+            <Spinner animation="grow" variant="primary" />
+        </div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
+    // Ensure data is an array before mapping over it
+    if (!Array.isArray(data)) {
+        return <div>Data is not in the expected format.</div>;
+    }
+
+    return (
+        <div style={{ overflowX: 'hidden' }}>
+            <Nav />
+            <div className="row p-4">
+                <div className="col col-md-4">
+                    {/* Pass refetch function to AddNote component */}
+                    <AddNote refetchNotes={refetch} />
+                </div>
+
+                <div className="col col-md-8">
+                    <div className="text-end fw-bold">
+                        Total notes:  {data.length}
+                    </div>
+
+                    {data.length === 0 ? (
+                        <p className='text-center mt-4'>No note available.</p>
+                    ) : (
+                        data.map((note) => (
+                            <NoteCard note={note} />
+                        ))
+                    )}
+
+                    {/* Toast messages */}
+                    <ToastMsg
+                        show={showToast}
+                        setShow={setShowToast}
+                        msg={toastMsg}
+                        status={toastStatus}
+                    />
+                </div >
+            </div >
+        </div >
+    );
+};
+
+export default Home;

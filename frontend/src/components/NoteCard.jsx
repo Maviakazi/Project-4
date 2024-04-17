@@ -1,15 +1,21 @@
-import { Link } from "react-router-dom";
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import { PencilFill, TrashFill } from "react-bootstrap-icons";
 
-export default function NoteCard({note}) {
+const NoteCard = ({ note, fetchNote, deleteNote }) => {
     return (
-        <div className="noteCard">
-            <h2 className="title">
-                <Link to={`/details/${note._id}`} style={{textDecoration: 'none', color: '#f5400f'}}>{note.title}</Link>
-                <Link to={`/details/${note._id}`} style={{color: '#f5400f'}}><i className="fa-solid fa-ellipsis-vertical"></i></Link>
-            </h2>
-            <p className="details">
-                {note.details}
-            </p>
-        </div>
+        <Card className='mt-3'>
+            <Card.Body>
+                <Card.Title>{note.title}</Card.Title>
+                <Card.Text>
+                    {note.details}
+                </Card.Text>
+                <Button variant="primary" size="sm" onClick={() => fetchNote(note._id)}><PencilFill /> Edit</Button>
+                <Button className='mx-3' variant="danger" size="sm" onClick={() => deleteNote(note._id)}><TrashFill /> Delete</Button>
+            </Card.Body>
+        </Card>
     );
 }
+
+export default NoteCard;
