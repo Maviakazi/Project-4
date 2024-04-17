@@ -6,12 +6,18 @@ import AddNote from '../components/AddNote';
 import NoteCard from '../components/NoteCard';
 import ToastMsg from '../components/ToastMsg';
 import { Spinner } from 'react-bootstrap';
+import axios from 'axios';
+import EditModal from '../components/EditModal';
 
 const Home = () => {
     // Toast states
     const [showToast, setShowToast] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
     const [toastStatus, setToastStatus] = useState('');
+    // to store single note
+    const [noteInfo, setNoteInfo] = useState({});
+    // modal info and data
+    const [modalShow, setModalShow] = React.useState(false);
 
     useEffect(() => {
         fetchNotes();
@@ -22,12 +28,36 @@ const Home = () => {
 
             const response = await fetch('http://localhost:3500/api/notes');
             const data = await response.json();
-            console.log(data.data);
             return data.data;
+
         } catch (error) {
             setShowToast(true);
             setToastStatus("Error");
             setToastMsg("Failed to fetch notes!");
+        }
+    }
+
+    const deleteNote = async (id) => {
+        try {
+            const response = await axios.delete(`http://localhost:3500/api/notes/${id}`);
+
+            if (response.data.statusCode === 200) {
+                setShowToast(true);
+                setToastStatus("Success");
+                setToastMsg(response.data.msg);
+
+                // refetching updated data
+                refetch();
+            } else {
+                setShowToast(true);
+                setToastStatus("Error");
+                setToastMsg(response.data.msg);
+            }
+
+        } catch (error) {
+            setShowToast(true);
+            setToastStatus("Error");
+            setToastMsg("Internal server error!");
         }
     }
 
@@ -73,7 +103,7 @@ const Home = () => {
                         <p className='text-center mt-4'>No note available.</p>
                     ) : (
                         data.map((note) => (
-                            <NoteCard note={note} />
+                            <NoteCard note={note} deleteNote={deleteNote} />
                         ))
                     )}
 
@@ -83,6 +113,13 @@ const Home = () => {
                         setShow={setShowToast}
                         msg={toastMsg}
                         status={toastStatus}
+                    />
+
+                    {/* View info modal */}
+                    <EditModal
+                        note={noteInfo}
+                        show={modalShow}
+                        onHide={() => setModalShow(false)}
                     />
                 </div >
             </div >
