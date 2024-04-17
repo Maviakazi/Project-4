@@ -68,7 +68,7 @@ const updateNote = async (req, res, next) => {
   const noteCount = await Note.findById(id).countDocuments();
 
   if (noteCount === 0) {
-    res.status(404).json({ statusCode: 404, msg: 'The note does not exist!' });
+    res.status(400).json({ statusCode: 400, msg: 'The note does not exist!' });
   }
 
   // Validate the request body against the schema
@@ -115,7 +115,7 @@ const deleteNote = async (req, res, next) => {
     const noteCount = await Note.findById(id).countDocuments();
 
     if (noteCount === 0) {
-      res.status(404).json({ statusCode: 404, msg: 'The note does not exit!' });
+      res.status(400).json({ statusCode: 400, msg: 'The note does not exit!' });
     }
 
     // Find the existing snippet by _id and delete the document
