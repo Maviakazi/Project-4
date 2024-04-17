@@ -23,19 +23,14 @@ const getAllNotes = async (req, res, next) => {
 
 const addNote = async (req, res, next) => {
   // Validate the request body against the schema
-  const { error, value } = schema.validate(req.body, { abortEarly: false });
+  const { error, value } = schema.validate(req.body);
 
   // If there's a validation error, respond with a 400 Bad Request
   if (error) {
-    const validationErrors = error.details.reduce((acc, { path, message }) => {
-      // Use the field name as a string without quotes
-      const fieldName = path.join('.');
-
-      acc[fieldName] = message;
-      return acc;
-    }, {}) || {};
-
-    return res.status(400).json({ statusCode: 400, validationErrors });
+    return res.status(400).json({
+      statusCode: 400,
+      msg: error.details[0].message
+    })
   }
 
   try {
@@ -71,25 +66,20 @@ const updateNote = async (req, res, next) => {
   const { id } = req.params;
 
   const noteCount = await Note.findById(id).countDocuments();
-  
+
   if (noteCount === 0) {
     res.status(404).json({ statusCode: 404, msg: 'The note does not exist!' });
   }
 
   // Validate the request body against the schema
-  const { error, value } = schema.validate(req.body, { abortEarly: false });
+  const { error, value } = schema.validate(req.body);
 
   // If there's a validation error, respond with a 400 Bad Request
   if (error) {
-    const validationErrors = error.details.reduce((acc, { path, message }) => {
-      // Use the field name as a string without quotes
-      const fieldName = path.join('.');
-
-      acc[fieldName] = message;
-      return acc;
-    }, {}) || {};
-
-    return res.status(400).json({ statusCode: 400, validationErrors });
+    return res.status(400).json({
+      statusCode: 400,
+      msg: error.details[0].message
+    })
   }
 
   try {
