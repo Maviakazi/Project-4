@@ -1,5 +1,12 @@
 // Importing Models
 const Note = require("../models/noteModel");
+const Joi = require('joi');
+
+// Define the validation schema
+const schema = Joi.object({
+  title: Joi.string().required().max(100),
+  details: Joi.string().required(),
+});
 
 // To retrieve all notes from the database
 const getAllNotes = async (req, res, next) => {
@@ -15,6 +22,22 @@ const getAllNotes = async (req, res, next) => {
 }
 
 const addNote = async (req, res, next) => {
+  // Validate the request body against the schema
+  const { error, value } = schema.validate(req.body, { abortEarly: false });
+
+  // If there's a validation error, respond with a 400 Bad Request
+  if (error) {
+    const validationErrors = error.details.reduce((acc, { path, message }) => {
+      // Use the field name as a string without quotes
+      const fieldName = path.join('.');
+
+      acc[fieldName] = message;
+      return acc;
+    }, {}) || {};
+
+    return res.status(400).json({ statusCode: 400, validationErrors });
+  }
+
   try {
     const newNote = new Note({
       title: value.title,
@@ -51,6 +74,22 @@ const updateNote = async (req, res, next) => {
   
   if (noteCount === 0) {
     res.status(404).json({ statusCode: 404, msg: 'The note does not exist!' });
+  }
+
+  // Validate the request body against the schema
+  const { error, value } = schema.validate(req.body, { abortEarly: false });
+
+  // If there's a validation error, respond with a 400 Bad Request
+  if (error) {
+    const validationErrors = error.details.reduce((acc, { path, message }) => {
+      // Use the field name as a string without quotes
+      const fieldName = path.join('.');
+
+      acc[fieldName] = message;
+      return acc;
+    }, {}) || {};
+
+    return res.status(400).json({ statusCode: 400, validationErrors });
   }
 
   try {
