@@ -1,13 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+* {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+}
+
+.fab .icon {
+  display: block;
+  width: 64px;
+  height: 64px;
+  padding: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  transition: 0.5s;
+}
+
+.fab .icon:hover {
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(0, 0, 0, 1);
+}
+
+.add-note-card,
+.update-note-card {
+  max-width: 700px;
+  width: 700px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, .1);
+  margin: 2rem auto;
+  border: none !important;
+}
+
+@media screen and (max-width: 740px) {
+
+  .add-note-card,
+  .update-note-card {
+    width: calc(100% - 2rem);
+    margin: 2rem 1rem;
+  }
+}
+
+.note-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem !important;
+  margin-top: 2rem;
+}
+
+.note-card {
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, .1);
+  border: none !important;
+  max-width: 280px;
+  width: 280px;
+  min-height: 250px;
+}
+
+.note-card .bottom {
+  width: calc(100% - 2rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 1rem;
+}
+
+.note-card .bottom .buttons-col {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.note-card .bottom .button {
+  border-radius: 50% !important;
+  width: 42px;
+  height: 42px;
+  border: none !important;
+}
+
+.note-card .bottom .edit {
+  background-color: rgba(0, 0, 0, 0.8);
+  margin-right: 12px;
+  transition: 0.5s;
+}
+
+.note-card .bottom .edit:hover {
+  background-color: rgba(0, 0, 0, 1);
 }

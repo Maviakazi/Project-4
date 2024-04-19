@@ -1,14 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from "./pages/Home";
-import AddForm from "./pages/AddForm";
 import EditNote from './pages/EditNote';
+import AddNote from './pages/AddNote';
 
 function App() {
     return (
         <>
             <Routes>
                 <Route path={"/"} element={<Home />} />
-                <Route path={"/add"} element={<AddForm />} />
+                <Route path={"/add"} element={<AddNote />} />
                 <Route path={"/edit/:id"} element={<EditNote />} />
             </Routes>
         </>

@@ -12,9 +12,13 @@ const noteSchema = new Schema(
       type: String,
       required: true,
     },
+    color: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-const Note = mongoose.model("notes_db", noteSchema);
+const Note = mongoose.model("StickyNote", noteSchema);
 module.exports = Note;

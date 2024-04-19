@@ -6,6 +6,7 @@ const Joi = require('joi');
 const schema = Joi.object({
   title: Joi.string().required().max(100),
   details: Joi.string().required(),
+  color: Joi.string().required(),
 });
 
 // To retrieve all notes from the database
@@ -37,6 +38,7 @@ const addNote = async (req, res, next) => {
     const newNote = new Note({
       title: value.title,
       details: value.details,
+      color: value.color,
     });
 
     await newNote.save();
@@ -90,6 +92,7 @@ const updateNote = async (req, res, next) => {
         $set: {
           title: value.title,
           details: value.details,
+          color: value.color,
         },
       }
     );
