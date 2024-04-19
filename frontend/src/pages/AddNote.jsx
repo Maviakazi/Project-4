@@ -9,9 +9,11 @@ import * as Yup from "yup";
 import axios from "axios";
 import ToastMsg from "../components/ToastMsg";
 import Nav from '../components/Nav';
+import { useNavigate } from 'react-router-dom';
 
 const AddNote = () => {
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     // Toast states
     const [showToast, setShowToast] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
@@ -39,12 +41,8 @@ const AddNote = () => {
                 const response = await axios.post('http://localhost:3500/api/notes/add', values);
 
                 if (response.data.statusCode === 201) {
-                    setShowToast(true);
-                    setToastStatus("Success");
-                    setToastMsg(response.data.msg);
-
-                    // Reset the form fields after submission
-                    formik.resetForm();
+                    navigate('/');
+                       
                 }
                 else {
                     setShowToast(true);

@@ -10,10 +10,11 @@ import axios from "axios";
 import ToastMsg from "../components/ToastMsg";
 import { useParams } from 'react-router-dom';
 import Nav from '../components/Nav';
+import { useNavigate } from 'react-router-dom';
 
 const EditNote = () => {
     const { id } = useParams();
-
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
     const [fetchedNoteId, setFetchedNoteId] = useState('');
     // Toast states
@@ -70,6 +71,9 @@ const EditNote = () => {
                     setShowToast(true);
                     setToastStatus("Success");
                     setToastMsg(response.data.msg);
+                    setTimeout(()=>{
+                        navigate('/');
+                        }, 2000);
                 }
                 else {
                     setShowToast(true);
